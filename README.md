@@ -4,6 +4,8 @@ Terraform-managed AWS infrastructure that provisions a serverless customer inqui
 
 ## Architecture
 
+![Architecture](docs/architecture.png)
+
 | Component | Resource | Purpose |
 |---|---|---|
 | API Gateway v2 | `api-inquiry-{env}` | HTTP API with four routes |
