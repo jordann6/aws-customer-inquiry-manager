@@ -1,0 +1,46 @@
+name: Deploy Customer Inquiry Manager
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  TF_DIR: terraform
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~1.9"
+
+      - name: Terraform Init
+        working-directory: ${{ env.TF_DIR }}
+        run: terraform init
+
+      - name: Terraform Plan
+        working-directory: ${{ env.TF_DIR }}
+        run: |
+          terraform plan \
+            -var="support_email=${{ secrets.SUPPORT_EMAIL }}" \
+            -var="sender_email=${{ secrets.SENDER_EMAIL }}" \
+            -out=tf.plan
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        working-directory: ${{ env.TF_DIR }}
+        run: terraform apply tf.plan
