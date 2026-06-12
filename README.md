@@ -1,5 +1,7 @@
 # AWS Customer Inquiry Manager
 
+[![Validate](https://github.com/jordann6/aws-customer-inquiry-manager/actions/workflows/validate.yml/badge.svg)](https://github.com/jordann6/aws-customer-inquiry-manager/actions/workflows/validate.yml)
+
 Terraform-managed AWS infrastructure that provisions a serverless customer inquiry API. Customers submit inquiries via HTTP POST; the Lambda handler stores the inquiry in DynamoDB, sends an internal notification to the support team via SES, and returns a confirmation email to the customer. Support agents can query by status, retrieve individual inquiries, and move them through a defined lifecycle with PATCH requests.
 
 ## Architecture
